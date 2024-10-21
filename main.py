@@ -4,6 +4,8 @@ from test import *
 import csv
 from time import sleep
 from selenium.webdriver.common.by import By
+from pnr_scrapping.constants import BASE_DIR
+from os.path import join
 
 
 def main():
@@ -121,7 +123,12 @@ def main():
         ]
 
         # Write data to CSV file
-        with open("pnr_details.csv", "w", newline="", encoding="utf-8") as csvfile:
+        with open(
+            join(BASE_DIR + "/data.csv", "pnr_details.csv"),
+            "w",
+            newline="",
+            encoding="utf-8",
+        ) as csvfile:
             writer = csv.DictWriter(csvfile, fieldnames=csv_headers)
             writer.writeheader()
             writer.writerows(all_data)
