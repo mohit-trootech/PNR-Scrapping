@@ -4,6 +4,8 @@ from selenium.webdriver.common.by import By
 from constants import *
 from image_processing import CaptchaImageFiltering
 from time import sleep
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
 
 
 class PnrScrapper:
@@ -13,8 +15,13 @@ class PnrScrapper:
         self.driver = webdriver.Firefox()
         self.create_driver()
         self.pnr = pnr
-        self.pnr_input = self.find_element_by_id(PNR_INPUT)
-        self.capcha_modal_btn = self.find_element_by_id(CAPTCHA_MODAL)
+        # Use WebDriverWait to wait for elements to be present
+        self.pnr_input = WebDriverWait(self.driver, 10).until(
+            EC.presence_of_element_located((By.ID, PNR_INPUT))
+        )
+        self.capcha_modal_btn = WebDriverWait(self.driver, 10).until(
+            EC.presence_of_element_located((By.ID, CAPTCHA_MODAL))
+        )
         self.captcha = None
 
     def create_driver(self):
@@ -26,7 +33,10 @@ class PnrScrapper:
 
     def find_element_by_id(self, ID):
         """Fetch Elements with IDs"""
-        return self.driver.find_element(By.ID, ID)
+        # Use WebDriverWait to wait for element to be clickable
+        return WebDriverWait(self.driver, 10).until(
+            EC.element_to_be_clickable((By.ID, ID))
+        )
 
     def get_tag_name(self, element):
         """Return Element tag name"""
@@ -47,6 +57,8 @@ class PnrScrapper:
             ):
                 self.pnr_input.send_keys(self.pnr)
                 self.capcha_modal_btn.click()
+                # You might need to adjust the wait time here
+                sleep(2)
                 if self.capcha_modal_btn.is_displayed():
                     print("Captcha Modal Opened")
         else:

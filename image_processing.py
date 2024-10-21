@@ -49,6 +49,7 @@ class CaptchaImageFiltering:
                 return eval(matches[0][:-1])
             else:
                 continue
+        raise Exception("Captcha Not Solved")
 
 
 if __name__ == "__main__":
